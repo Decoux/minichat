@@ -1,3 +1,18 @@
+<?php
+try
+  {
+      $bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', 'yeswewebPaul');
+  }
+
+catch (Exception $e)
+  {
+          die('Erreur : ' . $e->getMessage());
+  }
+
+  $reponse = $bdd->query('SELECT id, pseudo, message, date_message FROM mini_chat ORDER BY ID DESC LIMIT 0, 10');
+  $donnees = $reponse->fetchAll();
+?>
+
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -18,22 +33,7 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
-<?php
 
-try
-  {
-      $bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', 'yeswewebPaul');
-  }
-
-catch (Exception $e)
-  {
-          die('Erreur : ' . $e->getMessage());
-  }
-
-
-
-
-?>
 <body>
   <div class="container">
     <div class="row  flex-column">
@@ -42,24 +42,26 @@ catch (Exception $e)
         <textarea class="col-md-12 my-3" name="message" rows="4" cols="40" maxlength="120"></textarea>
         <button type="submit" name="button" class="col-md-12 btn btn-secondary my-3">Send</button>
       </form>
-      <?php
-      $reponse = $bdd->query('SELECT * FROM mini_chat ORDER BY ID DESC LIMIT 0, 10');
-      $donnees = $reponse->fetch();
-
-      
-        while ($donnees = $reponse->fetch()) {
-          $pseudo = htmlspecialchars($donnees['pseudo']);
-          $message = htmlspecialchars($donnees['message']);
-
-          echo "<strong>message n°" . $donnees['id'] . "<br /></strong>";
-          echo "<strong><span style='color: blue'>Pseudo :</span>" .$pseudo . "<br /></strong>";
-          echo "<strong><span style='color: red'>message :</span> " . $message . "<br /></strong>";
-
-      }
 
 
 
-      $reponse->closeCursor();
+        <?php
+          
+          foreach($donnees as $val) {
+            $pseudo = htmlspecialchars($val['pseudo']);
+            $message = htmlspecialchars($val['message']);
+            echo "<strong>" . $val['date_message'] . "<br /></strong>";
+            echo "<p>message n°" . $val['id'] . "</p><br />";
+            echo "<p><span style='color: blue'>Pseudo :</span>" .$pseudo . "</p><br />";
+            echo "<p><strong><span style='color: red'>message :</span></strong> " . $message . "</p><br />";
+
+        }
+
+
+
+
+
+
       ?>
     </div>
   </div>
